@@ -1,0 +1,19 @@
+name: Test AI Security Scanner
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-security-scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run AI-Powered Security Scanner
+        uses: Srivatsanalluraya/AI-Security-Scanner@v1
+        with:
+          scan_path: "."
