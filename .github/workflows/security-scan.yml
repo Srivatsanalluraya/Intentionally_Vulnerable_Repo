@@ -14,6 +14,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run AI-Powered Security Scanner
-        uses: Srivatsanalluraya/AI-Security-Scanner@v1
+        uses: Srivatsanalluraya/AI-Security-Scanner@v1.0
         with:
           scan_path: "."
