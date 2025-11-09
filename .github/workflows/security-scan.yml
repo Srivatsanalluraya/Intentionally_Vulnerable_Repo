@@ -1,4 +1,4 @@
-name: Test AI Security Scanner
+name: AI Vulnerability Scan
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
   pull_request:
 
 jobs:
-  run-security-scanner:
+  security-scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Run AI-Powered Security Scanner
-        uses: Srivatsanalluraya/AI-Security-Scanner@v1.0
+      - name: Run AI Security Scanner
+        uses: Srivatsanalluraya/AI-Security-Scanner3.0@v0.1
         with:
-          scan_path: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
