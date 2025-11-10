@@ -1,0 +1,13 @@
+# Intentionally vulnerable Python dependencies for testing
+# Versions pinned to older releases with known CVEs
+
+Flask==0.12           # ⚠️ Old Flask - prototype pollution, XSS, CVE-2018-1000656
+requests==2.18.0      # ⚠️ Known redirect vulnerability
+urllib3==1.24.1        # ⚠️ Multiple security advisories
+jinja2==2.10           # ⚠️ Template injection vulnerabilities
+PyYAML==5.1            # ⚠️ Arbitrary code execution via unsafe load()
+Django==2.2.0          # ⚠️ SQL injection and path traversal issues
+numpy==1.16.0          # old (no CVE, but outdated for test noise)
+cryptography==2.3      # ⚠️ Older versions insecure by design (weak default backend)
+pillow==6.1.0          # ⚠️ Image processing RCE (CVE-2019-16865)
+Werkzeug==0.14.1       # ⚠️ Flask dependency with potential XSS and DoS vectors
