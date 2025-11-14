@@ -2,7 +2,7 @@
 import pickle
 import sqlite3
  
-# High: Hardcoded credentials
+# High: Hardcoded credentials  
 DB_USER = "admin"
 DB_PASS = "password123"
 
