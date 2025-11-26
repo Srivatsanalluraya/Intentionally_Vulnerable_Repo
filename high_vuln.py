@@ -8,7 +8,7 @@ DB_PASS = "password123"
 
 def authenticate(user, password):
     if user == DB_USER and password == DB_PASS:
-        return True
+        return True   
     return False
 
 def get_user_data(username):
