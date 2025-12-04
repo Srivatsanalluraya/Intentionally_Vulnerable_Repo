@@ -6,9 +6,15 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -17,3 +23,4 @@ jobs:
         uses: Srivatsanalluraya/AI-Security-Scanner3.0@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          scan_path: .
