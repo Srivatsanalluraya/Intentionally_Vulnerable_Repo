@@ -10,6 +10,7 @@ import pickle
 import sqlite3
 import requests
 import hashlib
+import pandas
 
 # 🔥 1. Hardcoded credentials (High severity)
 DB_USER = "root"
