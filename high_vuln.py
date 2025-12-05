@@ -1,5 +1,6 @@
 # high_vuln.py
 import pickle
+import pandas
 import sqlite3
  
 # High: Hardcoded credentials
