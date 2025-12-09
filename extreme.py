@@ -12,7 +12,7 @@ import requests
 import hashlib
 import sys
 import random
-
+import os
 # 🔥 1. Hardcoded credentials (High severity)
 DB_USER = "root"
 DB_PASS = "SuperSecret123"
