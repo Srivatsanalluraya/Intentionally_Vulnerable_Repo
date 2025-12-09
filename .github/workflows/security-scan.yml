@@ -1,29 +1,24 @@
 name: AI Vulnerability Scan
 
+permissions:
+  contents: write
+  pull-requests: write         # REQUIRED for PR comments to work
+
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Source Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      # -----------------------------------------
-      # 🔥 Cache Bust (forces GitHub to rebuild Docker image)
-      # -----------------------------------------
-      - name: Force Docker Rebuild (Cache Bust)
-        run: echo "CACHE_BUST=$RANDOM" >> $GITHUB_ENV
-
-      - name: Run AI Security Scanner
+      - name: Run AI Scanner
         uses: Srivatsanalluraya/AI-Security-Scanner3.0@main
-        env: 
-          CACHE_BUST: ${{ env.CACHE_BUST }}
         with:
-          scan_path: "."
           github_token: ${{ secrets.GITHUB_TOKEN }}
