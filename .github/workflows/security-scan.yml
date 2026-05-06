@@ -1,24 +1,106 @@
-name: AI Vulnerability Scan
+name: AI Security Scan
 
 permissions:
-  contents: write
-  pull-requests: write         # REQUIRED for PR comments to work
+  contents: write          # For committing reports
+  pull-requests: write     # For PR comments
+  security-events: write   # For security tab
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Run AI Scanner
+    steps:
+      # ============================
+      # Checkout Repository
+      # ============================
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+
+      # ============================
+      # Check if Repo has Files  ✅ NEW
+      # ============================
+      - name: Check if repository has files
+        id: repo_check
+        run: |
+          FILE_COUNT=$(find . -type f \
+            ! -path "./.git/*" \
+            ! -path "./.github/*" | wc -l)
+
+          echo "File count: $FILE_COUNT"
+
+          if [ "$FILE_COUNT" -eq 0 ]; then
+            echo "empty=true" >> $GITHUB_OUTPUT
+          else
+            echo "empty=false" >> $GITHUB_OUTPUT
+          fi
+
+
+      # ============================
+      # Run AI Security Scanner
+      # ============================
+      - name: Run AI Security Scanner
+        if: steps.repo_check.outputs.empty == 'false'   # ✅ MODIFIED
         uses: Srivatsanalluraya/AI-Security-Scanner3.0@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          enforce_policy: "true"
+        env:
+          # 🔐 Secure AI Backend (Render)
+          AI_BACKEND_URL:  https://ai-security-backend.onrender.com/analyze
+
+
+      # ============================
+      # Skip Message (only when empty) ✅ NEW
+      # ============================
+      - name: Skip scan (empty repo)
+        if: steps.repo_check.outputs.empty == 'true'
+        run: echo "🟡 Repository is empty — skipping security scan."
+
+
+      # ============================
+      # Upload Reports as Artifacts
+      # ============================
+      - name: Upload Security Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports-${{ github.run_number }}
+          path: |
+            security-reports/
+            reports/
+          retention-days: 7
+
+
+      # ============================
+      # Commit Generated Reports
+      # ============================
+      - name: Commit scan reports
+        if: always()
+        run: |
+
+          echo "📦 Committing security reports..."
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Ensure directory exists
+          mkdir -p security-reports
+
+          # Stage reports
+          git add security-reports/ || true
+
+          # Commit if changed
+          git diff --cached --quiet || \
+            git commit -m "📊 Automated security scan report [skip ci]"
+
+          # Push safely
+          git push || echo "⚠ Push skipped (PR / no permission / no changes)"
