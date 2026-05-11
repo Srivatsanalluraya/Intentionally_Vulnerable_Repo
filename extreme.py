@@ -11,7 +11,7 @@ import sqlite3
 import requests
 import hashlib
 import sys
-
+import random
 
 # 🔥 1. Hardcoded credentials (High severity)
 DB_USER = "root"
